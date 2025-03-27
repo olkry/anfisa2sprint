@@ -63,10 +63,17 @@ class IceCream(PublishedModel):
     )
     toppings = models.ManyToManyField(Topping, verbose_name='Топпинг')
     is_on_main = models.BooleanField(default=False, verbose_name='На главную')
+    output_order = models.PositiveSmallIntegerField(
+        default=100,
+        verbose_name='Порядок отображения'
+    )
+    price = models.DecimalField(max_digits=5, decimal_places=2, 
+                                verbose_name='Цена')
 
     class Meta:
         verbose_name = 'мороженное'
         verbose_name_plural = 'Мороженое'
+        ordering = ('output_order', 'title')
 
     def __str__(self):
         return self.title

@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}
+  Анфиса для друзей. Главная
+{% endblock %}
+{% block content %}
+  <h1 class="pb-2 mb-0">Главная страница</h1>
+  {% for ice_cream in ice_cream_list %}
+    <h3>{{ ice_cream.title }} ID: {{ ice_cream.id }}</h3>
+    {% comment %} при .values() {% endcomment %}
+    {% comment %} <p>Категория: {{ ice_cream.category__title }}</p>  {% endcomment %}
+    {% comment %} при .select_related(): {% endcomment %}
+    {% comment %} <p>Категория: {{ ice_cream.category.title }}</p>
+    <p>Слаг категории: {{ ice_cream.category.slug }}</p>
+    <p>Порядок отображения: {{ ice_cream.category.output_order }}</p> {% endcomment %}
+    <p>{{ ice_cream.wrapper__title }}</p>
+    <p>{{ ice_cream.description }}</p>
+  {% endfor %}
+{% endblock %}

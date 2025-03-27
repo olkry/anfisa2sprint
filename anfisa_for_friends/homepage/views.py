@@ -5,6 +5,24 @@ from django.shortcuts import render
 from ice_cream.models import IceCream
 from ice_cream.models import Category
 
+
+def index(request):
+    template_name = 'homepage/index.html'
+    # Запрашиваем нужные поля из базы данных:
+    ice_cream_list = IceCream.objects.values(
+        'id', 'title', 'price', 'description'
+    ).filter(
+        # Проверяем, что
+        is_published=True,  # Сорт разрешён к публикации;
+        is_on_main=True,  # Сорт разрешён к публикации на главной странице;
+        category__is_published=True  # Категория разрешена к публикации.
+    )
+    context = {
+        'ice_cream_list': ice_cream_list,
+    }
+    return render(request, template_name, context)
+
+
 # Через прямые фильтры
 # def index(request):
 #     template = 'homepage/index.html'
@@ -60,14 +78,43 @@ from ice_cream.models import Category
 #     }
 #     return render(request, template_name, context)
 
-def index(request):
-    template_name = 'homepage/index.html'
-    ice_cream_list = IceCream.objects.values(
-        'id', 'title', 'description'
-    ).filter(
-        is_published=True, is_on_main=True
-    ).order_by('title')[1:4]
-    context = {
-        'ice_cream_list': ice_cream_list,
-    }
-    return render(request, template_name, context)
+# def index(request):
+#     template_name = 'homepage/index.html'
+#     ice_cream_list = IceCream.objects.values(
+#         'id', 'title', 'description', 'wrapper__title'
+#     ).filter(
+#         is_published=True, is_on_main=True
+#     ).order_by('title')[1:4]
+#     context = {
+#         'ice_cream_list': ice_cream_list,
+#     }
+#     return render(request, template_name, context)
+
+# # Получение из связанной таблицы:
+# JOIN c помощью метода .values()
+# def index(request):
+#     template_name = 'homepage/index.html'
+#     # ice_cream_list = IceCream.objects.all()
+#     ice_cream_list = IceCream.objects.values(
+#         'id', 'title', 'description', 'category__title'
+#     ).filter(
+#         category__is_published=True
+#     )
+#     context = {
+#         'ice_cream_list': ice_cream_list,
+#     }
+#     return render(request, template_name, context)
+
+
+# # JOIN c помощью .select_related()
+# def index(request):
+#     template_name = 'homepage/index.html'
+#     ice_cream_list = IceCream.objects.select_related(
+#         'category'
+#         ).filter(
+#             category__is_published=True
+#         )
+#     context = {
+#         'ice_cream_list': ice_cream_list,
+#     }
+#     return render(request, template_name, context)

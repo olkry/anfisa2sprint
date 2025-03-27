@@ -39,11 +39,11 @@ from ice_cream.models import IceCream
 def ice_cream_detail(request, pkd):
     template = 'ice_cream/detail.html'
     ice_cream = get_object_or_404(
-        IceCream.objects.values(
-            'title', 'description'
-            ).filter(is_published=True),
-        pk=pkd
-        )
+        IceCream.objects.filter(
+            is_published=True,
+            category__is_published=True
+        ), pk=pkd
+    )
     context = {
         'ice_cream': ice_cream,
     }
@@ -52,5 +52,9 @@ def ice_cream_detail(request, pkd):
 
 def ice_cream_list(request):
     template = 'ice_cream/list.html'
-    context = {}
+    ice_cream_list = IceCream.objects.select_related('category').filter(
+            is_published=True,
+            category__is_published=True
+        ).order_by('category')
+    context = {'ice_cream_list': ice_cream_list}
     return render(request, template, context)
